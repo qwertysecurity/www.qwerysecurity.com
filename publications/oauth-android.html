@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vol silencieux de jeton OAuth sur Android via un navigateur par défaut autre que Chrome – Felix Boulet</title>
+<link rel="alternate" hreflang="en" href="oauth-android_en.html">
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--muted:#666;--link:#0b5cad;--line:#e2e2e2}
+@media (prefers-color-scheme:dark){:root{--bg:#161616;--fg:#e8e8e8;--muted:#999;--link:#6cb0f5;--line:#333}}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;overflow-wrap:anywhere}
+main{max-width:760px;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+nav{display:flex;flex-wrap:wrap;gap:.25rem 1rem;font-size:.9rem;margin-bottom:1.5rem}
+h1{font-size:1.6rem;line-height:1.3;margin:0 0 .4rem}
+p.meta{color:var(--muted);margin:0 0 1rem;font-size:.95rem}
+h2{font-size:1.1rem;margin:1.75rem 0 .4rem;padding-bottom:.25rem;border-bottom:1px solid var(--line)}
+p{margin:.5rem 0}ul,ol{padding-left:1.3rem;margin:.4rem 0}li{padding:.15rem 0}
+a{color:var(--link)}.d{color:var(--muted)}
+@media print{nav{display:none}}
+</style>
+</head>
+<body>
+<main>
+<nav><a href="../index.html">Accueil</a><a href="../index.html#publications">Publications</a><a href="oauth-android_en.html" hreflang="en" lang="en">English</a></nav>
+<h1>Vol silencieux de jeton OAuth sur Android via un navigateur par défaut autre que Chrome</h1>
+<p class="meta">Microsoft 365 · Corrigé le 8 octobre 2025 · Signalé au MSRC · Article original : 7 novembre 2025</p>
+<h2>Résumé</h2>
+<p>Une application malveillante installée sur un téléphone Android pouvait obtenir des jetons d’authentification Microsoft 365 valides pour l’utilisateur, sans page de connexion ni interaction. L’attaque fonctionnait lorsque le navigateur par défaut n’était pas Chrome (par exemple Edge) et que l’utilisateur y était déjà connecté. Microsoft a corrigé le flux d’authentification le 8 octobre 2025.</p>
+<h2>Impact</h2>
+<p>L’attaquant obtient l’accès au compte avec les privilèges de la victime : lecture, modification et suppression de données dans tous les services auxquels le compte a accès.</p>
+<h2>Cause racine</h2>
+<p>Le flux de connexion vérifiait l’agent utilisateur de Chrome sur Android, et cette vérification pouvait être contournée en utilisant un autre navigateur. Combinées à l’authentification silencieuse (<code>prompt=none</code>) et à une redirection vers une adresse locale, l’identité du navigateur et la destination de la redirection étaient traitées comme une preuve d’interaction légitime de l’utilisateur. Il s’agit d’une hypothèse de conception, pas d’une erreur d’implémentation.</p>
+<h2>Chemin d’attaque (simplifié)</h2>
+<ol><li>La victime installe une application malveillante (installée hors boutique ou déguisée en application légitime).</li>
+<li>L’application lance une demande de connexion Microsoft avec un client de première partie qui accepte une redirection locale, en mode silencieux.</li>
+<li>Elle fait passer la demande par le navigateur déjà connecté.</li>
+<li>Le navigateur redirige silencieusement vers l’adresse locale avec un code d’autorisation.</li>
+<li>L’application capture le code et l’envoie à l’attaquant.</li></ol>
+<h2>Leçons pour les équipes qui conçoivent des flux d’authentification</h2>
+<ul><li>Ne pas suivre de redirection vers une destination non fiable ou non HTTPS sans interaction explicite de l’utilisateur.</li>
+<li>Exiger une interaction de l’utilisateur pour les redirections vers localhost; ne pas y permettre l’authentification silencieuse.</li>
+<li>Traiter la validation des URI de redirection comme un contrôle critique : les jetons en dépendent.</li></ul>
+<h2>Chronologie</h2>
+<ul><li>Début 2025 : signalé au MSRC. D’abord classé hors portée, puis rouvert après une seconde analyse.</li>
+<li>8 octobre 2025 : correctif confirmé et déployé.</li>
+<li>7 novembre 2025 : publication de l’article original.</li></ul>
+<p class="d"><a href="https://blog.qwertysecurity.com/Articles/blog5.html">Article original (blog)</a></p>
+</main>
+</body>
+</html>

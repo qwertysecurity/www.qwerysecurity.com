@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local file exfiltration through Power BI’s query engine – Felix Boulet</title>
+<link rel="alternate" hreflang="fr" href="powerbi-exfiltration.html">
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--muted:#666;--link:#0b5cad;--line:#e2e2e2}
+@media (prefers-color-scheme:dark){:root{--bg:#161616;--fg:#e8e8e8;--muted:#999;--link:#6cb0f5;--line:#333}}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;overflow-wrap:anywhere}
+main{max-width:760px;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+nav{display:flex;flex-wrap:wrap;gap:.25rem 1rem;font-size:.9rem;margin-bottom:1.5rem}
+h1{font-size:1.6rem;line-height:1.3;margin:0 0 .4rem}
+p.meta{color:var(--muted);margin:0 0 1rem;font-size:.95rem}
+h2{font-size:1.1rem;margin:1.75rem 0 .4rem;padding-bottom:.25rem;border-bottom:1px solid var(--line)}
+p{margin:.5rem 0}ul,ol{padding-left:1.3rem;margin:.4rem 0}li{padding:.15rem 0}
+a{color:var(--link)}.d{color:var(--muted)}
+@media print{nav{display:none}}
+</style>
+</head>
+<body>
+<main>
+<nav><a href="../index_en.html">Home</a><a href="../index_en.html#publications">Publications</a><a href="powerbi-exfiltration.html" hreflang="fr" lang="fr">Français</a></nav>
+<h1>Local file exfiltration through Power BI’s query engine</h1>
+<p class="meta">Microsoft Power BI · CVE-2025-59240 (listed under Excel) · Fixed in the November 2025 security update · Rated Important · Original write-up: February 9, 2026</p>
+<h2>Summary</h2>
+<p>A malicious Power BI file could silently read files on the user’s computer and send their contents out through DNS lookups, bypassing the privacy-level protection meant to stop data from reaching external sources. Microsoft fixed the issue in the November 2025 security update.</p>
+<h2>Impact</h2>
+<p>Any file readable by the user, such as an SSH private key, could be exfiltrated simply by getting the user to open the file.</p>
+<h2>Root cause</h2>
+<p>The query engine checked a file path, which makes the operating system resolve it (including over the network), before evaluating whether the privacy level allowed it. Filtering a folder listing on a crafted name was enough to trigger that resolution. The fix evaluates the privacy scope of a path before attempting to resolve it.</p>
+<h2>Attack path (simplified)</h2>
+<ol><li>The victim opens a crafted Power BI file.</li>
+<li>A query reads a local file the user can access.</li>
+<li>The content is encoded into a string that is safe to use in a DNS name.</li>
+<li>The query builds a network path that places this string in a host name controlled by the attacker.</li>
+<li>A folder filter makes the engine check that path, and the resulting DNS lookup delivers the data to the attacker’s name server.</li></ol>
+<h2>Lessons</h2>
+<ul><li>Evaluate trust boundaries before any operation that can cause outbound traffic, including name resolution.</li>
+<li>Treat an unauthorized outbound connection as a potential exfiltration channel, not only as a credential leak.</li>
+<li>When a report is dismissed, a concrete demonstration of impact can change the outcome: here a forced-authentication report was closed, and the reworked file-exfiltration report was reopened and rated Important.</li></ul>
+<h2>Timeline</h2>
+<ul><li>First report (forced authentication): not accepted.</li>
+<li>August 20, 2025: new report demonstrating file exfiltration; rejected again on September 8.</li>
+<li>September 9, 2025: case reopened, severity raised to Important.</li>
+<li>November 2025: fixed in the security update.</li>
+<li>February 9, 2026: original write-up published.</li></ul>
+<p class="d"><a href="https://blog.qwertysecurity.com/Articles/blog6.html">Original post (blog)</a></p>
+</main>
+</body>
+</html>

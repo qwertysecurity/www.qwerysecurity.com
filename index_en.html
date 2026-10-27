@@ -18,6 +18,11 @@ p.lang{text-align:right;margin:0 0 1rem;font-size:.9rem}
 p.role{color:var(--muted);margin:.1rem 0 1.25rem}
 ul{padding-left:1.2rem;margin:0}
 li{padding:.2rem 0}
+.id{display:flex;gap:1rem;align-items:center;margin:0 0 1.25rem}
+.id img{width:96px;height:96px;border-radius:50%;object-fit:cover;flex:none}
+.id h1{margin:0}
+.id p.role{margin:.1rem 0 .4rem}
+.id p.links{margin:0}
 a{color:var(--link)}
 .d{color:var(--muted)}
 </style>
@@ -25,8 +30,14 @@ a{color:var(--link)}
 <body>
 <main>
 <p class="lang"><a href="index.html" hreflang="fr" lang="fr">Français</a></p>
+<header class="id">
+<img src="assets/felix-boulet.jpg" width="96" height="96" alt="Photo of Felix Boulet">
+<div>
 <h1>Felix Boulet</h1>
 <p class="role">Technical Leader and Offensive Security Researcher</p>
+<p class="links"><a href="https://www.linkedin.com/in/felix-boulet/">LinkedIn</a> · <a href="mailto:Felix.Boulet@qwertysecurity.com">Felix.Boulet@qwertysecurity.com</a></p>
+</div>
+</header>
 
 <p>Specializing in complex systems evaluation, identity architecture, and design-level flaws. Over 8 years of cybersecurity experience, including 6+ years in offensive security. My research focuses mainly on identity, authorization, and multi-tenant isolation in cloud platforms.</p>
 
@@ -50,11 +61,6 @@ a{color:var(--link)}
 <li><a href="publications/powerbi-exfiltration_en.html">Local file exfiltration through Power BI</a> <span class="d">– CVE-2025-59240, fixed November 2025</span></li>
 </ul>
 
-<h2>Contact</h2>
-<ul>
-<li><a href="mailto:Felix.Boulet@qwertysecurity.com">Felix.Boulet@qwertysecurity.com</a></li>
-<li><a href="https://www.linkedin.com/in/felix-boulet/">LinkedIn</a></li>
-</ul>
 </main>
 </body>
 </html>
